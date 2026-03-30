@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shree Sai Services - Electronics Sales</title>
+
+<link rel="icon" href="{{ url_for('static', filename='images/WhatsApp Image 2026-01-12 at 22.54.38.jpeg') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header>
+    <div class="container header-container">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='images/WhatsApp Image 2026-01-12 at 22.54.38.jpeg') }}">
+            <h1>Shree Sai Services KC</h1>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('services') }}">Services</a></li>
+                <li><a href="{{ url_for('sales') }}">Sales</a></li>
+                <li><a href="{{ url_for('booking') }}">Book Service</a></li>
+                <li><a href="{{ url_for('about') }}">About Us</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<section class="sales">
+    <h1 class="sales-main-title">Electronics Sales</h1>
+
+    <div class="sales-grid">
+    {% for product in products %}
+        <div class="sales-card">
+
+            <img src="{{ url_for('static', filename='images/' + product.image) }}" 
+                 alt="{{ product.name }}">
+
+            <h3>{{ product.name }}</h3>
+            <p>{{ product.description }}</p>
+
+            <span class="price-tag">₹{{ product.price }}</span>
+
+            <a href="{{ url_for('buy_product', product_id=product.id) }}" 
+               class="buy-btn">
+                Buy Now
+            </a>
+
+        </div>
+    {% endfor %}
+</div>
+
+</section>
+
+<footer>
+    <p>&copy; 2026 Shree Sai Services. All Rights Reserved.</p>
+</footer>
+
+</body>
+</html>
