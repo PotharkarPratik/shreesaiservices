@@ -7,8 +7,7 @@ import os
 from dotenv import load_dotenv
 
 # ---------- LOAD ENV ----------
-load_dotenv("pass.env")
-
+load_dotenv("pass.env") if os.path.exists("pass.env") else None
 ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
 EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
 
