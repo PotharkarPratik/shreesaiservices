@@ -311,6 +311,99 @@ def admin_logout():
     return redirect(url_for("admin_login"))
 
 
+# ---------- SETUP DB ----------
+@app.route("/setup-db")
+def setup_db():
+    conn = get_db_connection()
+    if not conn:
+        return jsonify({"status": "error", "message": "Database connection failed"}), 500
+
+    try:
+        cursor = conn.cursor()
+
+        # --- Create tables ---
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS bookings (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                fullname VARCHAR(255),
+                phone VARCHAR(20),
+                email VARCHAR(255),
+                service VARCHAR(255),
+                date DATE
+            )
+        """)
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS orders (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                product_id INT,
+                product_name VARCHAR(255),
+                price DECIMAL(10,2),
+                customer_name VARCHAR(255),
+                customer_email VARCHAR(255),
+                customer_phone VARCHAR(20),
+                customer_address TEXT,
+                status VARCHAR(50)
+            )
+        """)
+
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS products (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255),
+                description TEXT,
+                price DECIMAL(10,2),
+                image VARCHAR(255)
+            )
+        """)
+
+        # --- Check if data already exists to avoid duplicate inserts ---
+        cursor.execute("SELECT COUNT(*) FROM bookings")
+        if cursor.fetchone()[0] == 0:
+            cursor.executemany("""
+                INSERT INTO bookings (id, fullname, phone, email, service, date)
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, [
+                (1, 'Sai Gorakh Kapare', '9960629513', 'kaparesai620@gmail.com', 'TV Repair', '2026-07-08'),
+                (2, 'Sai Kapare', '9960629513', 'kaparesai620@gmail.com', 'AC Repair', '2026-03-31'),
+                (3, 'Sai Gorakh Kapare', '09960629513', 'kaparesai620@gmail.com', 'TV Repair', '2026-03-31'),
+                (4, 'Sai Gorakh Kapare', '09960629513', 'kaparesai620@gmail.com', 'Refrigerator Repair', '2026-03-31'),
+            ])
+
+        cursor.execute("SELECT COUNT(*) FROM orders")
+        if cursor.fetchone()[0] == 0:
+            cursor.executemany("""
+                INSERT INTO orders (id, product_id, product_name, price, customer_name, customer_email, customer_phone, customer_address, status)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, [
+                (1, 2, 'Fridge', 25000.00, 'Sai', 'kaparesai620@gmail.com', '9960629513', 'Kedgaon,Ahilyanagar', 'Pending'),
+            ])
+
+        cursor.execute("SELECT COUNT(*) FROM products")
+        if cursor.fetchone()[0] == 0:
+            cursor.executemany("""
+                INSERT INTO products (id, name, description, price, image)
+                VALUES (%s, %s, %s, %s, %s)
+            """, [
+                (1, 'AC', 'Cooling AC', 30000.00, 'freeze.jpeg'),
+                (2, 'Fridge', 'Double door fridge', 25000.00, 'frige.jpg'),
+                (3, 'TV', 'Smart TV', 40000.00, 'tv.jpeg'),
+            ])
+
+        conn.commit()
+        return jsonify({
+            "status": "success",
+            "message": "Database tables created and sample data inserted successfully."
+        })
+
+    except Exception as e:
+        print("Setup DB failed:", e)
+        return jsonify({"status": "error", "message": str(e)}), 500
+    finally:
+        cursor.close()
+        conn.close()
+
+
 # ---------- RUN ----------
 if __name__ == "__main__":
     app.run(debug=True)
