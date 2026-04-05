@@ -304,3 +304,20 @@ def admin_logout():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
+
+
+def get_db_connection():
+    try:
+        print("DB HOST:", DB_HOST)
+        conn = mysql.connector.connect(
+            host=DB_HOST,
+            user=DB_USER,
+            password=DB_PASSWORD,
+            database=DB_NAME,
+            port=int(DB_PORT) if DB_PORT else 3306
+        )
+        print("Database connected successfully")
+        return conn
+    except Exception as e:
+        print("Database connection failed:", e)
+        return None
