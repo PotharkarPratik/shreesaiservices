@@ -6,14 +6,11 @@ from email.mime.multipart import MIMEMultipart
 import os
 
 # ---------- ENV VARIABLES ----------
-ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
-
-DB_HOST = os.getenv("DB_HOST")
-DB_USER = os.getenv("DB_USER")
-DB_PASSWORD = os.getenv("DB_PASSWORD")
-DB_NAME = os.getenv("DB_NAME")
-DB_PORT = os.getenv("DB_PORT")
+DB_HOST = os.getenv("MYSQLHOST")
+DB_USER = os.getenv("MYSQLUSER")
+DB_PASSWORD = os.getenv("MYSQLPASSWORD")
+DB_NAME = os.getenv("MYSQLDATABASE")
+DB_PORT = os.getenv("MYSQLPORT")
 
 # ---------- FLASK ----------
 app = Flask(__name__)
