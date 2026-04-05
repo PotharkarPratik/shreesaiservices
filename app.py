@@ -3,9 +3,6 @@ import mysql.connector
 import os
 
 # ---------- ENV VARIABLES ----------
-ADMIN_EMAIL = os.getenv("ADMIN_EMAIL")
-EMAIL_PASSWORD = os.getenv("EMAIL_PASSWORD")
-
 DB_HOST = os.getenv("MYSQLHOST")
 DB_USER = os.getenv("MYSQLUSER")
 DB_PASSWORD = os.getenv("MYSQLPASSWORD")
@@ -59,6 +56,12 @@ def contact():
     return render_template("contact.html")
 
 
+@app.route("/sales")
+def sales():
+    return render_template("sales.html")
+
+
+# ---------- BOOKING PAGE + API ----------
 @app.route("/booking", methods=["GET", "POST"])
 def booking():
     if request.method == "POST":
